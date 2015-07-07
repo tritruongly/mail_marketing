@@ -18,4 +18,12 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel();
     }
+
+    public function addAction()
+    {
+        echo $this->getRequest()->getPost('event', null);
+        echo $this->getRequest()->getPost('email', null);
+        return $this->response;
+    }
+
 }
