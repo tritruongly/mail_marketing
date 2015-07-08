@@ -3,13 +3,25 @@
  */
 if(!window.email_app||window.email_app instanceof Array)
 {
-    //var oldQueue = window.email_app || [];
-    var setting = {
+    var setting =
+    {
+        url: 'http://localhost/mail-api/public/application/index/add',
         queue: []
     };
     window.email_app = function()
     {
-        var send = function()
+        var sendAction = function(callback)
+        {
+            var data = setting.queue;
+            var b = [];
+            for(var a = 0; a < data.length; a++)
+            {
+                b.push(data[a]);
+                setting.queue.slice(a, 1);
+            }
+            callback(b);
+        },
+        runAction = function(b)
         {
             var xmlhttp;
             if (window.XMLHttpRequest) {
@@ -17,42 +29,22 @@ if(!window.email_app||window.email_app instanceof Array)
             } else {
                 xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
             }
-
-            xmlhttp.onreadystatechange = function()
-            {
-                if (xmlhttp.readyState == XMLHttpRequest.DONE )
-                {
-                    if(xmlhttp.status == 200)
-                    {
-                        //document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
-                    }
-                    else if(xmlhttp.status == 400) {
-                        //alert('There was an error 400')
-                    }
-                    else {
-                        //alert('something else other than 200 was returned')
-                    }
-                }
-            }
-
-            for(var a = 0; a < setting.queue.length; a++)
-            {
-                var b = setting.queue[a];
-                xmlhttp.open("POST", "http://localhost/mail-api/public/application/index/add", true);
-                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-                xmlhttp.send('event=' + b.event + "&email=" + b.email);
-            }
+            xmlhttp.open("POST", setting.url, true);
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlhttp.send('data=' + JSON.stringify(b));
         };
         return {
             push: function() {
-                for (var a = 0; a < arguments.length; ++a) {
-                    setting.queue.push(arguments[a]);
+                if(arguments.length > 0) {
+                    for (var a = 0; a < arguments.length; ++a) {
+                        setting.queue.push(arguments[a]);
+                    }
+                    sendAction(runAction);
                 }
-                send();
             }
         };
     }();
-    window.email_app.push.apply(window.email_app)
+    window.email_app.push.apply(window.email_app);
 }
 
 

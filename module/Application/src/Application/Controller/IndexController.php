@@ -11,18 +11,39 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Application\Model\User;
 
 class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return new ViewModel();
+        $config = $this->getServiceLocator()->get('config');
+        $users = new User($config['db']);
+        var_dump($users->getAllUsers());
+        return $this->response;
+        //return new ViewModel();
     }
 
     public function addAction()
     {
-        echo $this->getRequest()->getPost('event', null);
-        echo $this->getRequest()->getPost('email', null);
+        $request = $this->getRequest()->getPost('data', null);
+        if(!empty($request))
+        {
+            $data = json_decode($request);
+            switch($data->event)
+            {
+                case 'setLogin':
+
+                    break;
+                case 'setCategories':
+
+                    break;
+                case 'setCancelOrder':
+
+                    break;
+
+            }
+        }
         return $this->response;
     }
 

@@ -13,6 +13,7 @@ use mailwizz\MailWizzApiBase;
 use mailwizz\Config;
 use mailwizz\Endpoint\Campaigns;
 
+
 class CampaignController extends AbstractActionController
 {
 
@@ -26,11 +27,9 @@ class CampaignController extends AbstractActionController
 
     public function indexAction()
     {
+        /*$campaigns = new Campaigns();
+        var_dump($campaigns->getCampaigns());*/
 
-
-
-        $campaigns = new Campaigns();
-        var_dump($campaigns->getCampaigns());
         return $this->response;
     }
 }
